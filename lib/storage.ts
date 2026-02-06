@@ -1,4 +1,4 @@
-import { StatusPage, Component, Incident } from './types';
+import { StatusPage, ComponentStatus } from './types';
 
 const STORAGE_KEY = 'pagelite_pages';
 
@@ -76,7 +76,7 @@ export function mockUptimeData(days: number = 90) {
     data.push({
       date: date.toISOString().split('T')[0],
       uptime: Math.round(uptime * 100) / 100,
-      status: status as any,
+      status: status as ComponentStatus,
     });
   }
   

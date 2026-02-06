@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { StatusPage, Component, Incident, ComponentStatus } from '@/lib/types';
 import { getPageByToken, savePage, generateId } from '@/lib/storage';
 import Link from 'next/link';
 
-export default function Builder() {
+function BuilderContent() {
   const searchParams = useSearchParams();
   const token = searchParams.get('token');
   
@@ -114,12 +114,6 @@ export default function Builder() {
     operational: 'bg-green-500',
     degraded: 'bg-yellow-500',
     down: 'bg-red-500',
-  };
-
-  const statusTextColors = {
-    operational: 'text-green-600',
-    degraded: 'text-yellow-600',
-    down: 'text-red-600',
   };
 
   const overallStatus = page.components.some(c => c.status === 'down')
@@ -397,5 +391,20 @@ export default function Builder() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function Builder() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    }>
+      <BuilderContent />
+    </Suspense>
   );
 }

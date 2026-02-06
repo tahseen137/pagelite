@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useParams } from 'next/navigation';
 import { StatusPage } from '@/lib/types';
 import { getPageBySlug, mockUptimeData } from '@/lib/storage';
 import Link from 'next/link';
 
-export default function StatusPageView() {
+function StatusPageContent() {
   const params = useParams();
   const slug = params.slug as string;
   
@@ -254,5 +254,20 @@ export default function StatusPageView() {
         </div>
       </main>
     </div>
+  );
+}
+
+export default function StatusPageView() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    }>
+      <StatusPageContent />
+    </Suspense>
   );
 }
